@@ -30,7 +30,7 @@ lines = [
     "mkdir /mnt/home",
     "mount /dev/sda3 /mnt/home",
     "lsblk",
-    "pacstrap /mnt base linux linux-firmware"
+    "pacstrap /mnt base linux linux-firmware",
     "genfstab -U /mnt >> /mnt/etc/fstab",
     "cat /mnt/etc/fstab",
     "arch-chroot /mnt /bin/bash"
