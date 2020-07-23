@@ -16,7 +16,7 @@ def runner(line):
 
 lines = [
     "ls /sys/firmware/efi/efivars",
-    "ping 8.8.8.8",
+    "ping 8.8.8.8 -c 2",
     "ip link",
     "timedatectl set-ntp true",
     "date",
