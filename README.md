@@ -1,1 +1,1 @@
-# arch_installer
+# whats-next
