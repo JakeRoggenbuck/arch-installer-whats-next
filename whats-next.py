@@ -1,11 +1,17 @@
 from dataclasses import dataclass
 import subprocess
+from enum import Enum
 
 
 @dataclass
 class Command:
     command: str
     description: str
+
+
+class Mode(Enum):
+    Easy = 0
+    Hard = 1
 
 
 INTRO = """Welcome to the new arch installer.
@@ -87,28 +93,58 @@ def prompt() -> str:
 
 
 class Runner:
-    def __init__(self):
+    def __init__(self, mode):
+        self.mode = mode
         self.index = 0
         self.length = len(LINES)
         self.going = True
 
     def run(self):
         while self.index < self.length:
-            line = LINES[self.index]
+            self.line = LINES[self.index]
 
             if self.going:
                 self.index += 1
-                print(line.description)
-                print(green(line.command))
+                print(self.line.description)
+                print(green(self.line.command))
 
-            self.command = prompt()
-            if not self.check_and_change_state():
-                try:
-                    subprocess.run([self.command], shell=True)
-                except subprocess.CalledProcessError as e:
-                    print(e.output)
+            if self.mode == Mode.Easy:
+                self.easy_mode()
+            elif self.mode == Mode.Hard:
+                self.hard_mode()
+
+    def easy_mode(self):
+        self.command = input("(R)un or (E)dit: ")
+        if not self.check_and_change_state():
+            if self.command == "R":
+                # Run the command verbatim
+                self.run_command(self.line.command)
+                print(end_line())
+            elif self.command == "E":
+                # Write the command to a temp file
+                with open("/tmp/runline", "w") as file:
+                    file.write(self.line.command)
+
+                # Open the temp file in vim, letting the user edit it
+                subprocess.run(["vim /tmp/runline"], shell=True)
+
+                # Read the file and run the content
+                with open("/tmp/runline", "r") as file:
+                    self.run_command(file.read())
 
                 print(end_line())
+
+    def hard_mode(self):
+        self.command = prompt()
+        if not self.check_and_change_state():
+            self.run_command(self.command)
+            print(end_line())
+
+    def run_command(self, command):
+        try:
+            subprocess.run([command], shell=True)
+        except subprocess.CalledProcessError as e:
+            print(e.output)
 
     def check_and_change_state(self):
         if self.command == "STOP":
@@ -143,5 +179,5 @@ class Runner:
 if __name__ == "__main__":
     print(blue(INTRO))
 
-    runner = Runner()
+    runner = Runner(Mode.Easy)
     runner.run()
