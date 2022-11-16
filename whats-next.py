@@ -133,6 +133,9 @@ class Runner:
                     self.run_command(file.read())
 
                 print(end_line())
+            else:
+                self.run_command(self.command)
+                print(end_line())
 
     def hard_mode(self):
         self.command = prompt()
