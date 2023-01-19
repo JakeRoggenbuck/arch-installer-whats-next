@@ -13,6 +13,12 @@ You need to type in the whole command to build up that memory
 
 ## Install
 ```sh
+## Official Mirror
+curl -LO https://jr0.org/cdn/whats-next.py
+# or
+wget https://jr0.org/cdn/whats-next.py
+
+## Github Source
 curl -LO https://raw.githubusercontent.com/JakeRoggenbuck/arch-installer-whats-next/main/whats-next.py
 # or
 wget https://raw.githubusercontent.com/JakeRoggenbuck/arch-installer-whats-next/main/whats-next.py
